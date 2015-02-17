@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>JS prototype chain & encapsulation</title>
+
+    <script type="text/javascript">
+
+      String.prototype.sayHello = function(){ return 'HEllo'; };    
+      "fsfdsf".sayHello();
+      // 
+      String.prototype.sayHello = function(){ return 'HEllo' + this; };
+      'asdasd'.sayHello();
+      // OR
+      function MyObj(){
+        return this;
+      } // undefined
+      MyObj.prototype = {}; // лінк на Object.prototype
+      MyObj.prototype.hello = function() {
+        return "HELLO!";
+      }
+      var a = new MyObj(); // undefined
+      a.hello();
+      a instanceof MyObj // true
+
+      // >>>
+
+      var b = new MyObj();
+      a.close(); // undefine
+      b.close(); // undefine
+      MyObj.prototype.close = function() { return "CLOSE"; }
+      a.close();
+      b.close();
+
+      // >>>
+
+      Human = function() { 
+        return this;
+      }
+      Human.prototype = {
+        type: "human",
+        age: 0,
+        whoAmI: function() { 
+          return this.type;
+        }
+      }
+      var a = new Human();
+      a.type;
+      a.age;
+      a.whoAmI();
+
+      function Man() { return this; }
+      
+      Man.prototype = new Human;  // OR > Man.prototype = {}; each Human.prototype as key = value, [key] = value
+      Man.prototype.type = "man"; // явний і неявний лінк на прототип?
+      
+      // >>>
+
+      Human = function() { 
+        this.age = 10;
+        return this; 
+      }
+      Human.prototype = {
+        type: "human",
+        age: 0,
+        whoAmI: function() { 
+          return this.type;
+        }
+      }
+      var a = new Human();
+      a.age;
+
+      // >>>
+
+      Child = function() {
+        this.age = 1;
+        this.type = "child";
+        this.say = function() {
+          return "age";
+        };
+        return this;
+      }
+
+
+      // JS encapsulation
+
+      (function(){  }()) // scope isolation
+
+      // >>> module pattern
+      (function(global){
+
+        function privateMethod() {
+        } // OR put constructor into global.Human = function() { }
+
+        global.Human = function() { }
+
+        global.Human.prototype = {
+          say: function(){
+            return privateMethod();
+          }
+        }
+
+      }(window)) 
+
+    </script>
+  </head>
+  <body>
+
+  </body>
+</html>
+
+
